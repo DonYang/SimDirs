@@ -19,12 +19,12 @@ class SimPlatform: OutlineProvider {
 		if let libraryURL = fileMgr.URLsForDirectory(.LibraryDirectory, inDomains: .UserDomainMask).first {
 			let deviceURL = libraryURL.URLByAppendingPathComponent("Developer/CoreSimulator/Devices")
 			
-			if let dirEnumerator = fileMgr.enumeratorAtURL(deviceURL, includingPropertiesForKeys: nil, options: [ .SkipsSubdirectoryDescendants, .SkipsHiddenFiles ], errorHandler: nil) {
+			if let dirEnumerator = fileMgr.enumeratorAtURL(deviceURL!, includingPropertiesForKeys: nil, options: [ .SkipsSubdirectoryDescendants, .SkipsHiddenFiles ], errorHandler: nil) {
 				let dirURLs = dirEnumerator.allObjects.flatMap { $0 as? NSURL }
 				
 				for baseURL in dirURLs {
 					let deviceURL			= baseURL.URLByAppendingPathComponent("device.plist")
-					guard let deviceInfo	= NSPropertyListSerialization.propertyListWithURL(deviceURL) else { continue }
+					guard let deviceInfo	= NSPropertyListSerialization.propertyListWithURL(deviceURL!) else { continue }
 					guard let runtime		= deviceInfo["runtime"] as? String else { continue }
 					let runtimeComponents	= runtime.stringByReplacingOccurrencesOfString("com.apple.CoreSimulator.SimRuntime.", withString: "").componentsSeparatedByString("-")
 

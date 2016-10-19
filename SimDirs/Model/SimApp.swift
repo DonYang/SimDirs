@@ -86,7 +86,7 @@ class SimApp: OutlineProvider, PropertyProvider {
 		guard let bundleURL		= self.bundleURL else { return }
 		let infoPlistURL		= bundleURL.URLByAppendingPathComponent("Info.plist")
 
-		if let plistInfo = NSPropertyListSerialization.propertyListWithURL(infoPlistURL) {
+		if let plistInfo = NSPropertyListSerialization.propertyListWithURL(infoPlistURL!) {
 			self.bundleName = plistInfo[String(kCFBundleNameKey)] as? String ?? ""
 			self.displayName = plistInfo["CFBundleDisplayName"] as? String ?? ""
 			self.shortVersion = plistInfo["CFBundleShortVersionString"] as? String ?? ""
@@ -111,10 +111,10 @@ class SimApp: OutlineProvider, PropertyProvider {
 						for iconName in bundleIconFiles {
 							var iconURL		= bundleURL.URLByAppendingPathComponent(iconName)
 							let icon2XURL	= bundleURL.URLByAppendingPathComponent("\(iconName)@2x.png")
-							let missingExt	= iconURL.pathExtension.map({ return $0.isEmpty }) ?? true
+							let missingExt	= iconURL!.pathExtension.map({ return $0.isEmpty }) ?? true
 							
 							if missingExt {
-								iconURL = iconURL.URLByAppendingPathExtension("png")
+								iconURL = iconURL!.URLByAppendingPathExtension("png")
 							}
 							
 // .car files not yet working :/
@@ -143,13 +143,13 @@ class SimApp: OutlineProvider, PropertyProvider {
 //								}
 //							}
 //							else {
-								if let icon = NSImage(contentsOfURL: iconURL) {
+								if let icon = NSImage(contentsOfURL: iconURL!) {
 									if self.icon?.size.width ?? 0 < icon.size.width {
 										self.icon = icon
 									}
 								}
 								
-								if let icon = NSImage(contentsOfURL: icon2XURL) {
+								if let icon = NSImage(contentsOfURL: icon2XURL!) {
 									if self.icon?.size.width ?? 0 < icon.size.width {
 										self.icon = icon
 									}

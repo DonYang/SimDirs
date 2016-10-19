@@ -44,7 +44,7 @@ class SimDevice: OutlineProvider, PropertyProvider {
 	
 	func gatherBuildInfo() {
 		let buildInfoURL	= self.baseURL.URLByAppendingPathComponent("data/Library/MobileInstallation/LastBuildInfo.plist")
-		guard let buildInfo	= NSPropertyListSerialization.propertyListWithURL(buildInfoURL) else { return }
+		guard let buildInfo	= NSPropertyListSerialization.propertyListWithURL(buildInfoURL!) else { return }
 		
 		self.platformVersion = buildInfo["ProductVersion"] as? String ?? ""
 		self.platformBuild = buildInfo["ProductBuildVersion"] as? String ?? ""
@@ -53,7 +53,7 @@ class SimDevice: OutlineProvider, PropertyProvider {
 	// LastLaunchServicesMap.plist seems to be the most reliable location to gather app info
 	func gatherAppInfoFromLastLaunchMap() {
 		let launchMapInfoURL	= self.baseURL.URLByAppendingPathComponent("data/Library/MobileInstallation/LastLaunchServicesMap.plist")
-		guard let launchInfo	= NSPropertyListSerialization.propertyListWithURL(launchMapInfoURL) else { return }
+		guard let launchInfo	= NSPropertyListSerialization.propertyListWithURL(launchMapInfoURL!) else { return }
 		guard let userInfo		= launchInfo["User"] as? [String : AnyObject] else { return }
 
 		for (bundleID, bundleInfo) in userInfo {
@@ -68,7 +68,7 @@ class SimDevice: OutlineProvider, PropertyProvider {
 	func gatherAppInfoFromAppState() {
 		for pathComponent in ["data/Library/FrontBoard/applicationState.plist", "data/Library/BackBoard/applicationState.plist"] {
 			let appStateInfoURL		= self.baseURL.URLByAppendingPathComponent(pathComponent)
-			guard let stateInfo		= NSPropertyListSerialization.propertyListWithURL(appStateInfoURL) else { continue }
+			guard let stateInfo		= NSPropertyListSerialization.propertyListWithURL(appStateInfoURL!) else { continue }
 
 			for (bundleID, bundleInfo) in stateInfo {
 				if !bundleID.containsString("com.apple") {
@@ -86,7 +86,7 @@ class SimDevice: OutlineProvider, PropertyProvider {
 	func gatherAppInfoFromInstallLogs() {
 		let installLogURL	= self.baseURL.URLByAppendingPathComponent("data/Library/Logs/MobileInstallation/mobile_installation.log.0")
 		
-		if let installLog = try? String(contentsOfURL: installLogURL) {
+		if let installLog = try? String(contentsOfURL: installLogURL!) {
 			let lines	= installLog.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())
 			
 			for line in lines.reverse() {
